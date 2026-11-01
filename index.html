@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Junaid Qazi</title>
+  <meta name="description" content="Electrical engineer working on sensing hardware, embedded systems and machine learning.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <h1 class="name">Junaid Qazi</h1>
+      <p class="bio">I'm an electrical engineer working on sensing hardware, embedded systems and machine learning. I hold an MSc in Electrical Engineering from DTU, where I specialised in embedded systems and AI and wrote my thesis on spiking neural networks for neuromorphic computing. I currently build and deploy AI tools as an AI and Green Energy Analyst at UNDP.</p>
+      <nav class="links" aria-label="Contact and profiles">
+        <a href="mailto:junaidqazi568@gmail.com">Email</a>
+        <a href="https://github.com/JQTemp">GitHub</a>
+      </nav>
+    </header>
+
+    <section class="work" aria-labelledby="projects">
+      <h2 id="projects">Projects</h2>
+
+      <article class="entry">
+        <a class="thumb" href="projects/intermittent-snn/" aria-hidden="true" tabindex="-1">
+          <img src="assets/img/intermittent-snn/checkpoint_grid_thumb.png" alt="" width="720" height="720" loading="lazy">
+        </a>
+        <div>
+          <h3><a href="projects/intermittent-snn/">Intermittent spiking neural networks for wearable EMG</a></h3>
+          <p>A framework that lets a spiking neural network keep its progress through power loss on a battery-free wearable, tested on hand gesture recognition from forearm EMG. First-author paper at IEEE EMBC, based on my master's thesis.</p>
+          <p class="tags">Spiking neural networks, intermittent computing, EMG, embedded AI</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <a class="thumb" href="projects/gfet-readout/" aria-hidden="true" tabindex="-1">
+          <img src="assets/img/gfet-readout/v2_top_thumb.png" alt="" width="720" height="675" loading="lazy">
+        </a>
+        <div>
+          <h3><a href="projects/gfet-readout/">Nanoamp readout for graphene FET sensors</a></h3>
+          <p>A low-noise board that measures currents of a few nanoamps from a graphene field-effect transistor chip. I led the electronics through two hardware versions, from a 14-channel STM32 board to a compact 6-channel design with a 12-bit SPI ADC and a Raspberry Pi.</p>
+          <p class="tags">Analog front end, PCB design, signal acquisition, bench testing</p>
+        </div>
+      </article>
+      <article class="entry">
+        <a class="thumb" href="projects/two-electrode-eeg/" aria-hidden="true" tabindex="-1">
+          <img src="assets/img/two-electrode-eeg/scalp_maps_thumb.png" alt="" width="720" height="720" loading="lazy">
+        </a>
+        <div>
+          <h3><a href="projects/two-electrode-eeg/">Two-electrode EEG classification with a CNN-LSTM</a></h3>
+          <p>A deep learning model that classifies resting-state EEG from two electrodes instead of nineteen. We ranked every electrode on its own, kept the strongest pair and tuned a CNN-LSTM to work with just those two.</p>
+          <p class="tags">EEG, deep learning, channel selection, temporal modelling</p>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

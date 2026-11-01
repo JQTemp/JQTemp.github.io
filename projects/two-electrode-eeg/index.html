@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Two-electrode EEG classification with a CNN-LSTM – Junaid Qazi</title>
+  <meta name="description" content="A deep learning model that classifies resting-state EEG from two electrodes instead of nineteen, found by ranking every electrode on its own and tuning a CNN-LSTM for the strongest pair.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <main class="page">
+    <a class="back" href="../../">All projects</a>
+
+    <header>
+      <h1 class="project-title">Two-electrode EEG classification with a <span class="nowrap">CNN-LSTM</span></h1>
+      <p class="lead">A deep learning model that classifies resting-state EEG from two electrodes instead of nineteen, as a first step towards a cheaper and simpler EEG device. We found the pair by ranking every electrode on its own, then tuned a CNN-LSTM to work with just those two.</p>
+    </header>
+
+    <figure class="hero">
+      <div class="plate">
+        <div class="heads">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="28 26 544 548" class="hm" role="img" aria-label="Reference model: accuracy of each electrode on its own"><style>
+  .hm { --hm-lo:#e3efec; --hm-hi:#0f5f54; --hm-ink:#1a2027; --hm-sub:#5b646e; --hm-line:#9aa3ab; --hm-scalp:#fbfbfa;
+        --hm-chance:#eceeef; --hm-sel:#a87a28; font-family: var(--sc-font, Inter, "Helvetica Neue", Arial, sans-serif); }
+  @media (prefers-color-scheme: dark) {
+    .hm { --hm-lo:#1e3530; --hm-hi:#7fd9c7; --hm-ink:#e7e9eb; --hm-sub:#a2aab3; --hm-line:#4a525a; --hm-scalp:#171b20;
+          --hm-chance:#252a30; --hm-sel:#d4a85a; }
+  }
+  .hm .hm-head { fill:none; stroke:var(--hm-line); stroke-width:2; }
+  .hm .hm-scalp { fill:var(--hm-scalp); }
+  .hm .hm-chance { fill:var(--hm-chance); stroke:var(--hm-line); stroke-width:1.2; stroke-dasharray:3 3; }
+  .hm .hm-sel { fill:none; stroke:var(--hm-sel); stroke-width:3; }
+  .hm .hm-title { fill:var(--hm-ink); font-size:21px; font-weight:600; }
+  .hm .hm-lab { fill:var(--hm-ink); font-size:15.5px; font-weight:600; }
+  .hm .hm-lab-on { fill:#ffffff; }
+  @media (prefers-color-scheme: dark) { .hm .hm-lab-on { fill:#0d1a17; } }
+  .hm .hm-lab-dim { fill:var(--hm-sub); font-weight:500; }
+  .hm .hm-val { font-size:13px; font-weight:500; }
+  .hm .hm-side, .hm .hm-tick { fill:var(--hm-sub); font-size:14px; }
+</style><text class="hm-title" x="300" y="61" text-anchor="middle">Reference model</text>
+<path class="hm-head" d="M276,118 L300,89 L324,118"/>
+<path class="hm-head" d="M87,296 C61,300 61,360 87,364"/>
+<path class="hm-head" d="M513,296 C539,300 539,360 513,364"/>
+<circle class="hm-head hm-scalp" cx="300" cy="330" r="215"/>
+<circle class="hm-chance" cx="241.9" cy="153.7" r="31"/>
+<text class="hm-lab hm-lab-dim" x="241.9" y="150.7" text-anchor="middle">Fp1</text>
+<text class="hm-lab hm-lab-dim hm-val" x="241.9" y="166.7" text-anchor="middle">chance</text>
+<circle class="hm-chance" cx="358.1" cy="153.7" r="31"/>
+<text class="hm-lab hm-lab-dim" x="358.1" y="150.7" text-anchor="middle">Fp2</text>
+<text class="hm-lab hm-lab-dim hm-val" x="358.1" y="166.7" text-anchor="middle">chance</text>
+<circle class="hm-chance" cx="149.5" cy="226.8" r="31"/>
+<text class="hm-lab hm-lab-dim" x="149.5" y="223.8" text-anchor="middle">F7</text>
+<text class="hm-lab hm-lab-dim hm-val" x="149.5" y="239.8" text-anchor="middle">chance</text>
+<circle cx="222.6" cy="239.7" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 24%, var(--hm-lo))"/>
+<text class="hm-lab" x="222.6" y="236.7" text-anchor="middle">F3</text>
+<text class="hm-lab hm-val" x="222.6" y="252.7" text-anchor="middle">58%</text>
+<circle cx="300.0" cy="244.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 43%, var(--hm-lo))"/>
+<text class="hm-lab" x="300.0" y="241.0" text-anchor="middle">Fz</text>
+<text class="hm-lab hm-val" x="300.0" y="257.0" text-anchor="middle">65%</text>
+<circle cx="377.4" cy="239.7" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 44%, var(--hm-lo))"/>
+<text class="hm-lab" x="377.4" y="236.7" text-anchor="middle">F4</text>
+<text class="hm-lab hm-val" x="377.4" y="252.7" text-anchor="middle">65%</text>
+<circle class="hm-chance" cx="450.5" cy="226.8" r="31"/>
+<text class="hm-lab hm-lab-dim" x="450.5" y="223.8" text-anchor="middle">F8</text>
+<text class="hm-lab hm-lab-dim hm-val" x="450.5" y="239.8" text-anchor="middle">chance</text>
+<circle cx="119.4" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 45%, var(--hm-lo))"/>
+<circle class="hm-sel" cx="119.4" cy="330.0" r="37"/>
+<text class="hm-lab" x="119.4" y="327.0" text-anchor="middle">T3</text>
+<text class="hm-lab hm-val" x="119.4" y="343.0" text-anchor="middle">66%</text>
+<circle cx="209.7" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 26%, var(--hm-lo))"/>
+<text class="hm-lab" x="209.7" y="327.0" text-anchor="middle">C3</text>
+<text class="hm-lab hm-val" x="209.7" y="343.0" text-anchor="middle">59%</text>
+<circle cx="300.0" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 34%, var(--hm-lo))"/>
+<text class="hm-lab" x="300.0" y="327.0" text-anchor="middle">Cz</text>
+<text class="hm-lab hm-val" x="300.0" y="343.0" text-anchor="middle">62%</text>
+<circle class="hm-chance" cx="390.3" cy="330.0" r="31"/>
+<text class="hm-lab hm-lab-dim" x="390.3" y="327.0" text-anchor="middle">C4</text>
+<text class="hm-lab hm-lab-dim hm-val" x="390.3" y="343.0" text-anchor="middle">chance</text>
+<circle cx="480.6" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 45%, var(--hm-lo))"/>
+<circle class="hm-sel" cx="480.6" cy="330.0" r="37"/>
+<text class="hm-lab" x="480.6" y="327.0" text-anchor="middle">T4</text>
+<text class="hm-lab hm-val" x="480.6" y="343.0" text-anchor="middle">66%</text>
+<circle class="hm-chance" cx="149.5" cy="433.2" r="31"/>
+<text class="hm-lab hm-lab-dim" x="149.5" y="430.2" text-anchor="middle">T5</text>
+<text class="hm-lab hm-lab-dim hm-val" x="149.5" y="446.2" text-anchor="middle">chance</text>
+<circle cx="222.6" cy="420.3" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 30%, var(--hm-lo))"/>
+<text class="hm-lab" x="222.6" y="417.3" text-anchor="middle">P3</text>
+<text class="hm-lab hm-val" x="222.6" y="433.3" text-anchor="middle">60%</text>
+<circle cx="300.0" cy="416.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 21%, var(--hm-lo))"/>
+<text class="hm-lab" x="300.0" y="413.0" text-anchor="middle">Pz</text>
+<text class="hm-lab hm-val" x="300.0" y="429.0" text-anchor="middle">57%</text>
+<circle cx="377.4" cy="420.3" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 42%, var(--hm-lo))"/>
+<text class="hm-lab" x="377.4" y="417.3" text-anchor="middle">P4</text>
+<text class="hm-lab hm-val" x="377.4" y="433.3" text-anchor="middle">65%</text>
+<circle class="hm-chance" cx="450.5" cy="433.2" r="31"/>
+<text class="hm-lab hm-lab-dim" x="450.5" y="430.2" text-anchor="middle">T6</text>
+<text class="hm-lab hm-lab-dim hm-val" x="450.5" y="446.2" text-anchor="middle">chance</text>
+<circle class="hm-chance" cx="241.9" cy="506.3" r="31"/>
+<text class="hm-lab hm-lab-dim" x="241.9" y="503.3" text-anchor="middle">O1</text>
+<text class="hm-lab hm-lab-dim hm-val" x="241.9" y="519.3" text-anchor="middle">chance</text>
+<circle class="hm-chance" cx="358.1" cy="506.3" r="31"/>
+<text class="hm-lab hm-lab-dim" x="358.1" y="503.3" text-anchor="middle">O2</text>
+<text class="hm-lab hm-lab-dim hm-val" x="358.1" y="519.3" text-anchor="middle">chance</text>
+<text class="hm-side" x="51" y="394" text-anchor="middle">left</text>
+<text class="hm-side" x="549" y="394" text-anchor="middle">right</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="28 26 544 548" class="hm" role="img" aria-label="Tuned model: accuracy of each electrode on its own"><style>
+  .hm { --hm-lo:#e3efec; --hm-hi:#0f5f54; --hm-ink:#1a2027; --hm-sub:#5b646e; --hm-line:#9aa3ab; --hm-scalp:#fbfbfa;
+        --hm-chance:#eceeef; --hm-sel:#a87a28; font-family: var(--sc-font, Inter, "Helvetica Neue", Arial, sans-serif); }
+  @media (prefers-color-scheme: dark) {
+    .hm { --hm-lo:#1e3530; --hm-hi:#7fd9c7; --hm-ink:#e7e9eb; --hm-sub:#a2aab3; --hm-line:#4a525a; --hm-scalp:#171b20;
+          --hm-chance:#252a30; --hm-sel:#d4a85a; }
+  }
+  .hm .hm-head { fill:none; stroke:var(--hm-line); stroke-width:2; }
+  .hm .hm-scalp { fill:var(--hm-scalp); }
+  .hm .hm-chance { fill:var(--hm-chance); stroke:var(--hm-line); stroke-width:1.2; stroke-dasharray:3 3; }
+  .hm .hm-sel { fill:none; stroke:var(--hm-sel); stroke-width:3; }
+  .hm .hm-title { fill:var(--hm-ink); font-size:21px; font-weight:600; }
+  .hm .hm-lab { fill:var(--hm-ink); font-size:15.5px; font-weight:600; }
+  .hm .hm-lab-on { fill:#ffffff; }
+  @media (prefers-color-scheme: dark) { .hm .hm-lab-on { fill:#0d1a17; } }
+  .hm .hm-lab-dim { fill:var(--hm-sub); font-weight:500; }
+  .hm .hm-val { font-size:13px; font-weight:500; }
+  .hm .hm-side, .hm .hm-tick { fill:var(--hm-sub); font-size:14px; }
+</style><text class="hm-title" x="300" y="61" text-anchor="middle">Tuned model</text>
+<path class="hm-head" d="M276,118 L300,89 L324,118"/>
+<path class="hm-head" d="M87,296 C61,300 61,360 87,364"/>
+<path class="hm-head" d="M513,296 C539,300 539,360 513,364"/>
+<circle class="hm-head hm-scalp" cx="300" cy="330" r="215"/>
+<circle cx="241.9" cy="153.7" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 44%, var(--hm-lo))"/>
+<text class="hm-lab" x="241.9" y="150.7" text-anchor="middle">Fp1</text>
+<text class="hm-lab hm-val" x="241.9" y="166.7" text-anchor="middle">65%</text>
+<circle cx="358.1" cy="153.7" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 54%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="358.1" y="150.7" text-anchor="middle">Fp2</text>
+<text class="hm-lab hm-lab-on hm-val" x="358.1" y="166.7" text-anchor="middle">69%</text>
+<circle cx="149.5" cy="226.8" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 49%, var(--hm-lo))"/>
+<text class="hm-lab" x="149.5" y="223.8" text-anchor="middle">F7</text>
+<text class="hm-lab hm-val" x="149.5" y="239.8" text-anchor="middle">67%</text>
+<circle cx="222.6" cy="239.7" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 69%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="222.6" y="236.7" text-anchor="middle">F3</text>
+<text class="hm-lab hm-lab-on hm-val" x="222.6" y="252.7" text-anchor="middle">74%</text>
+<circle cx="300.0" cy="244.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 92%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="300.0" y="241.0" text-anchor="middle">Fz</text>
+<text class="hm-lab hm-lab-on hm-val" x="300.0" y="257.0" text-anchor="middle">82%</text>
+<circle cx="377.4" cy="239.7" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 86%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="377.4" y="236.7" text-anchor="middle">F4</text>
+<text class="hm-lab hm-lab-on hm-val" x="377.4" y="252.7" text-anchor="middle">80%</text>
+<circle cx="450.5" cy="226.8" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 80%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="450.5" y="223.8" text-anchor="middle">F8</text>
+<text class="hm-lab hm-lab-on hm-val" x="450.5" y="239.8" text-anchor="middle">78%</text>
+<circle cx="119.4" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 95%, var(--hm-lo))"/>
+<circle class="hm-sel" cx="119.4" cy="330.0" r="37"/>
+<text class="hm-lab hm-lab-on" x="119.4" y="327.0" text-anchor="middle">T3</text>
+<text class="hm-lab hm-lab-on hm-val" x="119.4" y="343.0" text-anchor="middle">83%</text>
+<circle cx="209.7" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 65%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="209.7" y="327.0" text-anchor="middle">C3</text>
+<text class="hm-lab hm-lab-on hm-val" x="209.7" y="343.0" text-anchor="middle">73%</text>
+<circle cx="300.0" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 70%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="300.0" y="327.0" text-anchor="middle">Cz</text>
+<text class="hm-lab hm-lab-on hm-val" x="300.0" y="343.0" text-anchor="middle">74%</text>
+<circle cx="390.3" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 93%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="390.3" y="327.0" text-anchor="middle">C4</text>
+<text class="hm-lab hm-lab-on hm-val" x="390.3" y="343.0" text-anchor="middle">82%</text>
+<circle cx="480.6" cy="330.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 98%, var(--hm-lo))"/>
+<circle class="hm-sel" cx="480.6" cy="330.0" r="37"/>
+<text class="hm-lab hm-lab-on" x="480.6" y="327.0" text-anchor="middle">T4</text>
+<text class="hm-lab hm-lab-on hm-val" x="480.6" y="343.0" text-anchor="middle">84%</text>
+<circle cx="149.5" cy="433.2" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 54%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="149.5" y="430.2" text-anchor="middle">T5</text>
+<text class="hm-lab hm-lab-on hm-val" x="149.5" y="446.2" text-anchor="middle">69%</text>
+<circle cx="222.6" cy="420.3" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 87%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="222.6" y="417.3" text-anchor="middle">P3</text>
+<text class="hm-lab hm-lab-on hm-val" x="222.6" y="433.3" text-anchor="middle">81%</text>
+<circle cx="300.0" cy="416.0" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 67%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="300.0" y="413.0" text-anchor="middle">Pz</text>
+<text class="hm-lab hm-lab-on hm-val" x="300.0" y="429.0" text-anchor="middle">73%</text>
+<circle cx="377.4" cy="420.3" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 72%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="377.4" y="417.3" text-anchor="middle">P4</text>
+<text class="hm-lab hm-lab-on hm-val" x="377.4" y="433.3" text-anchor="middle">75%</text>
+<circle cx="450.5" cy="433.2" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 73%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="450.5" y="430.2" text-anchor="middle">T6</text>
+<text class="hm-lab hm-lab-on hm-val" x="450.5" y="446.2" text-anchor="middle">76%</text>
+<circle cx="241.9" cy="506.3" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 69%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="241.9" y="503.3" text-anchor="middle">O1</text>
+<text class="hm-lab hm-lab-on hm-val" x="241.9" y="519.3" text-anchor="middle">74%</text>
+<circle cx="358.1" cy="506.3" r="31" style="fill:color-mix(in oklab, var(--hm-hi) 75%, var(--hm-lo))"/>
+<text class="hm-lab hm-lab-on" x="358.1" y="503.3" text-anchor="middle">O2</text>
+<text class="hm-lab hm-lab-on hm-val" x="358.1" y="519.3" text-anchor="middle">76%</text>
+<text class="hm-side" x="51" y="394" text-anchor="middle">left</text>
+<text class="hm-side" x="549" y="394" text-anchor="middle">right</text></svg>
+        </div>
+        <div class="legend">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="96 626 800 56" class="hm" aria-hidden="true"><style>
+  .hm { --hm-lo:#e3efec; --hm-hi:#0f5f54; --hm-ink:#1a2027; --hm-sub:#5b646e; --hm-line:#9aa3ab; --hm-scalp:#fbfbfa;
+        --hm-chance:#eceeef; --hm-sel:#a87a28; font-family: var(--sc-font, Inter, "Helvetica Neue", Arial, sans-serif); }
+  @media (prefers-color-scheme: dark) {
+    .hm { --hm-lo:#1e3530; --hm-hi:#7fd9c7; --hm-ink:#e7e9eb; --hm-sub:#a2aab3; --hm-line:#4a525a; --hm-scalp:#171b20;
+          --hm-chance:#252a30; --hm-sel:#d4a85a; }
+  }
+  .hm .hm-head { fill:none; stroke:var(--hm-line); stroke-width:2; }
+  .hm .hm-scalp { fill:var(--hm-scalp); }
+  .hm .hm-chance { fill:var(--hm-chance); stroke:var(--hm-line); stroke-width:1.2; stroke-dasharray:3 3; }
+  .hm .hm-sel { fill:none; stroke:var(--hm-sel); stroke-width:3; }
+  .hm .hm-title { fill:var(--hm-ink); font-size:21px; font-weight:600; }
+  .hm .hm-lab { fill:var(--hm-ink); font-size:15.5px; font-weight:600; }
+  .hm .hm-lab-on { fill:#ffffff; }
+  @media (prefers-color-scheme: dark) { .hm .hm-lab-on { fill:#0d1a17; } }
+  .hm .hm-lab-dim { fill:var(--hm-sub); font-weight:500; }
+  .hm .hm-val { font-size:13px; font-weight:500; }
+  .hm .hm-side, .hm .hm-tick { fill:var(--hm-sub); font-size:14px; }
+</style><defs><linearGradient id="hm-grad" x1="0" x2="1"><stop offset="0.0" style="stop-color:color-mix(in oklab, var(--hm-hi) 0%, var(--hm-lo))"/><stop offset="0.1" style="stop-color:color-mix(in oklab, var(--hm-hi) 10%, var(--hm-lo))"/><stop offset="0.2" style="stop-color:color-mix(in oklab, var(--hm-hi) 20%, var(--hm-lo))"/><stop offset="0.3" style="stop-color:color-mix(in oklab, var(--hm-hi) 30%, var(--hm-lo))"/><stop offset="0.4" style="stop-color:color-mix(in oklab, var(--hm-hi) 40%, var(--hm-lo))"/><stop offset="0.5" style="stop-color:color-mix(in oklab, var(--hm-hi) 50%, var(--hm-lo))"/><stop offset="0.6" style="stop-color:color-mix(in oklab, var(--hm-hi) 60%, var(--hm-lo))"/><stop offset="0.7" style="stop-color:color-mix(in oklab, var(--hm-hi) 70%, var(--hm-lo))"/><stop offset="0.8" style="stop-color:color-mix(in oklab, var(--hm-hi) 80%, var(--hm-lo))"/><stop offset="0.9" style="stop-color:color-mix(in oklab, var(--hm-hi) 90%, var(--hm-lo))"/><stop offset="1.0" style="stop-color:color-mix(in oklab, var(--hm-hi) 100%, var(--hm-lo))"/></linearGradient></defs>
+<rect x="300" y="638" width="260" height="14" rx="3" fill="url(#hm-grad)"/>
+<text class="hm-tick" x="300.0" y="672" text-anchor="middle">50%</text>
+<text class="hm-tick" x="374.3" y="672" text-anchor="middle">60%</text>
+<text class="hm-tick" x="448.6" y="672" text-anchor="middle">70%</text>
+<text class="hm-tick" x="522.9" y="672" text-anchor="middle">80%</text>
+<text class="hm-tick" x="286" y="650" text-anchor="end">Accuracy on one electrode</text>
+<circle class="hm-chance" cx="630" cy="645" r="11"/><text class="hm-tick" x="650" y="650">at chance</text>
+<circle class="hm-sel" cx="770" cy="645" r="12"/><text class="hm-tick" x="792" y="650">selected pair</text></svg>
+        </div>
+      </div>
+      <figcaption><b>Figure 1.</b> Accuracy of each electrode used on its own, seen from above with the nose at the top. The reference model picked out T4 and T3, and after tuning every electrode scored higher, with T4 and T3 still on top.</figcaption>
+    </figure>
+
+    <dl class="specs">
+      <dt>Team</dt><dd>Two people, work shared equally with Marlene Antunes</dd>
+      <dt>Data</dt><dd>Public resting-state EEG, 28 subjects, 19 channels at 250 Hz</dd>
+      <dt>Electrodes used</dt><dd>2, T4 and T3</dd>
+      <dt>Model</dt><dd>Convolution layers with squeeze-and-excite, two LSTM layers</dd>
+      <dt>Validation accuracy</dt><dd>96.0%, mean of 10 runs</dd>
+      <dt>Test set</dt><dd>94.5% accuracy, AUC 0.98</dd>
+      <dt>Tools</dt><dd>Python, TensorFlow with Keras, Keras Tuner, MNE, DTU computing cluster</dd>
+    </dl>
+
+    <section class="prose" aria-labelledby="context">
+      <h2 id="context">Context</h2>
+      <p>EEG caps are costly and need expert knowledge to fit, which limits how widely they are used. Marlene Antunes and I wanted to know how far a deep learning model gets when it only sees two electrodes, as a first step towards a cheap and easy-to-use EEG device. We used a public resting-state dataset from the Institute of Psychiatry and Neurology in Warsaw with 14 people with schizophrenia and 14 healthy controls, each recorded on 19 channels at 250 Hz, and trained the model to tell the two groups apart.</p>
+    </section>
+
+    <section aria-labelledby="method">
+      <div class="prose">
+        <h2 id="method">Choosing two electrodes</h2>
+        <p>Each recording is re-referenced to the average of all channels, bandpass filtered from 0.5 to 45 Hz and cut into 25-second segments of 6,250 samples, which gives 1,142 segments. The segments are then z-scored with statistics from the training data.</p>
+        <p>There is no agreed best way to choose EEG channels, so we let a model decide (Figure 2). We took a CNN-LSTM from the literature (Shoeibi et al.) as a reference, trained it on each of the 19 electrodes on its own and ranked them by accuracy. Nine electrodes stayed at chance level. T4 and T3, over the right and left temporal lobes, came out on top at 65.9% and 65.7%, so we kept that pair (Figure 1).</p>
+      </div>
+      <figure>
+        <div class="sc-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 190" class="sc" role="img" aria-labelledby="pl-t pl-d">
+  <title id="pl-t">Channel reduction pipeline</title>
+  <desc id="pl-d">19-channel EEG from 28 subjects is preprocessed, a reference CNN-LSTM ranks each electrode on its own, the top pair T4 and T3 is kept, and the model is tuned with a Bayesian search and layer changes into the final two-electrode model.</desc>
+  <style>
+    .sc { --bg:#f7f7f5; --line:#e3e3df; --box:#ffffff; --stroke:#cfd3d8; --ink:#1d232b; --sub:#5f6670;
+          --acc:#1f7a6d; --accfill:#e6f1ee; font-family: var(--sc-font, Inter, "Helvetica Neue", Arial, sans-serif); }
+    @media (prefers-color-scheme: dark) {
+      .sc { --bg:#1a1e23; --line:#2c3238; --box:#22272d; --stroke:#3b424a; --ink:#e8eaed; --sub:#a3aab3;
+            --acc:#5cc2b0; --accfill:#1d3430; }
+    }
+    .sc .bg { fill: var(--bg); stroke: var(--line); }
+    .sc .box { fill: var(--box); stroke: var(--stroke); stroke-width: 1.5; }
+    .sc .key { fill: var(--accfill); stroke: var(--acc); stroke-width: 1.5; }
+    .sc .t { fill: var(--ink); font-size: 18px; font-weight: 600; }
+    .sc .s { fill: var(--sub); font-size: 15px; }
+    .sc .sig { stroke: var(--acc); stroke-width: 2; fill: none; }
+    .sc .ah { fill: var(--acc); }
+  </style>
+  <defs><marker id="pl-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs>
+  <rect class="bg" x="0.5" y="0.5" width="1199" height="189" rx="14"/>
+
+  <rect class="box" x="25" y="40" width="170" height="110" rx="10"/>
+  <text class="t" x="41" y="74">19-channel EEG</text>
+  <text class="s" x="41" y="99">28 subjects</text>
+  <text class="s" x="41" y="120">250 Hz</text>
+
+  <rect class="box" x="221" y="40" width="170" height="110" rx="10"/>
+  <text class="t" x="237" y="74">Preprocess</text>
+  <text class="s" x="237" y="99">0.5–45 Hz bandpass</text>
+  <text class="s" x="237" y="120">25 s segments</text>
+
+  <rect class="box" x="417" y="40" width="170" height="110" rx="10"/>
+  <text class="t" x="433" y="74">Rank electrodes</text>
+  <text class="s" x="433" y="99">reference model,</text>
+  <text class="s" x="433" y="120">one at a time</text>
+
+  <rect class="key" x="613" y="40" width="170" height="110" rx="10"/>
+  <text class="t" x="629" y="74">Keep top pair</text>
+  <text class="s" x="629" y="99">T4 and T3</text>
+
+  <rect class="box" x="809" y="40" width="170" height="110" rx="10"/>
+  <text class="t" x="825" y="74">Tune the model</text>
+  <text class="s" x="825" y="99">Bayesian search</text>
+  <text class="s" x="825" y="120">and layer changes</text>
+
+  <rect class="box" x="1005" y="40" width="170" height="110" rx="10"/>
+  <text class="t" x="1021" y="74">Final model</text>
+  <text class="s" x="1021" y="99">two electrodes</text>
+  <text class="s" x="1021" y="120">CNN-LSTM</text>
+
+  <path class="sig" d="M195,95 H219" marker-end="url(#pl-a)"/>
+  <path class="sig" d="M391,95 H415" marker-end="url(#pl-a)"/>
+  <path class="sig" d="M587,95 H611" marker-end="url(#pl-a)"/>
+  <path class="sig" d="M783,95 H807" marker-end="url(#pl-a)"/>
+  <path class="sig" d="M979,95 H1003" marker-end="url(#pl-a)"/>
+</svg>
+        </div>
+        <figcaption><b>Figure 2.</b> Channel reduction pipeline, from the full 19-channel recordings to a model that uses two electrodes.</figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="model">
+      <div class="prose">
+        <h2 id="model">Tuning the model</h2>
+        <p>Trained on T4 and T3 alone, the reference model overfit and its validation accuracy stalled at about 75%. We tuned it in two stages on DTU's computing cluster. A Bayesian search with Keras Tuner set the kernel sizes, LSTM units, dense layer sizes and learning rate, and we then changed the layers by hand.</p>
+        <p>The final model (Figure 3) splits each segment into ten 2.5-second windows. Two convolution layers with much wider kernels than the reference, 120 and 80 samples instead of 3, and a squeeze-and-excite block extract features from the windows. Two LSTM layers of 256 units then model how those features change over the 25 seconds.</p>
+      </div>
+      <figure>
+        <div class="sc-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 456" class="sc" role="img" aria-labelledby="ar-t ar-d">
+  <title id="ar-t">Architecture of the final two-electrode model</title>
+  <desc id="ar-d">A 25-second, two-electrode segment is split into ten 2.5-second windows that pass through a convolution layer with 64 filters and kernel 120, max pooling with a squeeze-and-excite block, a second convolution layer with 64 filters and kernel 80, and dropout with max pooling. The ten window features then pass through two LSTM layers of 256 units, dense layers of 100 and 50 units and a sigmoid output.</desc>
+  <style>
+    .sc { --bg:#f7f7f5; --line:#e3e3df; --box:#ffffff; --stroke:#cfd3d8; --ink:#1d232b; --sub:#5f6670;
+          --acc:#1f7a6d; --accfill:#e6f1ee; --muted:#9aa0a6; font-family: var(--sc-font, Inter, "Helvetica Neue", Arial, sans-serif); }
+    @media (prefers-color-scheme: dark) {
+      .sc { --bg:#1a1e23; --line:#2c3238; --box:#22272d; --stroke:#3b424a; --ink:#e8eaed; --sub:#a3aab3;
+            --acc:#5cc2b0; --accfill:#1d3430; --muted:#6b737c; }
+    }
+    .sc .bg { fill: var(--bg); stroke: var(--line); }
+    .sc .box { fill: var(--box); stroke: var(--stroke); stroke-width: 1.5; }
+    .sc .grp { fill: var(--accfill); stroke: var(--acc); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .sc .t { fill: var(--ink); font-size: 18px; font-weight: 600; }
+    .sc .s { fill: var(--sub); font-size: 15px; }
+    .sc .lab { fill: var(--ink); font-size: 15px; font-weight: 600; }
+    .sc .sig { stroke: var(--acc); stroke-width: 2; fill: none; }
+    .sc .ah { fill: var(--acc); }
+  </style>
+  <defs><marker id="ar-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs>
+  <rect class="bg" x="0.5" y="0.5" width="1199" height="455" rx="14"/>
+
+  <!-- row 1: input and per-window feature extractor -->
+  <rect class="box" x="25" y="62" width="150" height="100" rx="10"/>
+  <text class="t" x="41" y="96">Input</text>
+  <text class="s" x="41" y="120">25 s segment</text>
+  <text class="s" x="41" y="141">T4 and T3</text>
+
+  <rect class="box" x="199" y="62" width="150" height="100" rx="10"/>
+  <text class="t" x="215" y="96">Windows</text>
+  <text class="s" x="215" y="120">10 × 2.5 s,</text>
+  <text class="s" x="215" y="141">625 samples each</text>
+
+  <rect class="grp" x="370" y="30" width="806" height="152" rx="14"/>
+  <text class="lab" x="388" y="54">Convolutional feature extractor</text>
+
+  <rect class="box" x="388" y="68" width="175" height="96" rx="10"/>
+  <text class="t" x="404" y="100">Conv1D</text>
+  <text class="s" x="404" y="124">64 filters</text>
+  <text class="s" x="404" y="145">kernel 120</text>
+
+  <rect class="box" x="587" y="68" width="175" height="96" rx="10"/>
+  <text class="t" x="603" y="100">Max pool</text>
+  <text class="s" x="603" y="124">+ squeeze-and-</text>
+  <text class="s" x="603" y="145">excite block</text>
+
+  <rect class="box" x="786" y="68" width="175" height="96" rx="10"/>
+  <text class="t" x="802" y="100">Conv1D</text>
+  <text class="s" x="802" y="124">64 filters</text>
+  <text class="s" x="802" y="145">kernel 80</text>
+
+  <rect class="box" x="985" y="68" width="175" height="96" rx="10"/>
+  <text class="t" x="1001" y="100">Dropout</text>
+  <text class="s" x="1001" y="124">+ max pool</text>
+
+  <!-- row 2: temporal model and classifier -->
+  <rect class="box" x="25" y="262" width="190" height="100" rx="10"/>
+  <text class="t" x="41" y="296">LSTM</text>
+  <text class="s" x="41" y="320">256 units</text>
+
+  <rect class="box" x="265" y="262" width="190" height="100" rx="10"/>
+  <text class="t" x="281" y="296">LSTM</text>
+  <text class="s" x="281" y="320">256 units</text>
+
+  <rect class="box" x="505" y="262" width="190" height="100" rx="10"/>
+  <text class="t" x="521" y="296">Dense</text>
+  <text class="s" x="521" y="320">100 units, ReLU</text>
+
+  <rect class="box" x="745" y="262" width="190" height="100" rx="10"/>
+  <text class="t" x="761" y="296">Dense</text>
+  <text class="s" x="761" y="320">50 units, ReLU</text>
+
+  <rect class="box" x="985" y="262" width="190" height="100" rx="10"/>
+  <text class="t" x="1001" y="296">Output</text>
+  <text class="s" x="1001" y="320">sigmoid</text>
+
+  <path class="sig" d="M175,112 H197" marker-end="url(#ar-a)"/>
+  <path class="sig" d="M349,112 H386" marker-end="url(#ar-a)"/>
+  <path class="sig" d="M563,116 H585" marker-end="url(#ar-a)"/>
+  <path class="sig" d="M762,116 H784" marker-end="url(#ar-a)"/>
+  <path class="sig" d="M961,116 H983" marker-end="url(#ar-a)"/>
+  <path class="sig" d="M1072,182 V222 H120 V260" marker-end="url(#ar-a)"/>
+  <text class="s" x="600" y="214" text-anchor="middle">one feature vector per window, in time order</text>
+  <path class="sig" d="M215,312 H263" marker-end="url(#ar-a)"/>
+  <path class="sig" d="M455,312 H503" marker-end="url(#ar-a)"/>
+  <path class="sig" d="M695,312 H743" marker-end="url(#ar-a)"/>
+  <path class="sig" d="M935,312 H983" marker-end="url(#ar-a)"/>
+
+  <text class="s" x="25" y="404">Dropout between the dense layers and L2 regularisation on the convolution, LSTM and dense layers.</text>
+  <text class="s" x="25" y="427">Adam optimiser with learning rate 0.0001 and binary cross-entropy loss.</text>
+</svg>
+        </div>
+        <figcaption><b>Figure 3.</b> Architecture of the final two-electrode model.</figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="results">
+      <div class="prose">
+        <h2 id="results">Results</h2>
+        <p>With only T4 and T3, the tuned model reached 96.0% validation accuracy, averaged over 10 runs, and 94.5% accuracy on a held-out test set, with 95.5% precision, 95.5% recall and an AUC of 0.98. Where the reference model overfit, the tuned model's training and validation curves stay together (Figure 4). The tuning also lifted every single electrode, which now scores between 65% and 84% on its own. Segments were split at random rather than per person, so these numbers are optimistic.</p>
+      </div>
+      <figure>
+        <div class="pair">
+          <figure>
+            <div class="plate"><img src="../../assets/img/two-electrode-eeg/curves_reference.png" width="1400" height="818" loading="lazy"
+              alt="Training and validation accuracy of the reference model on T4 and T3. Training accuracy keeps climbing towards 95% while validation accuracy flattens around 75%."></div>
+            <p class="sub">Reference model on T4 and T3</p>
+          </figure>
+          <figure>
+            <div class="plate"><img src="../../assets/img/two-electrode-eeg/curves_tuned.png" width="1400" height="818" loading="lazy"
+              alt="Training and validation accuracy of the tuned model on T4 and T3. Both curves rise together and level off around 96%."></div>
+            <p class="sub">Tuned model on T4 and T3</p>
+          </figure>
+        </div>
+        <figcaption><b>Figure 4.</b> Training (blue) and validation (orange) accuracy over 100 epochs. Lines show the mean of 10 runs and the shading their spread.</figcaption>
+      </figure>
+    </section>
+
+    <section class="prose" aria-labelledby="recording">
+      <h2 id="recording">Recording our own EEG</h2>
+      <p>To learn the acquisition side as well, we recorded five minutes of resting-state EEG from ourselves with a 16-channel OpenBCI Ultracortex Mark IV headset at 250 Hz and filtered it into the standard frequency bands with a 50 Hz notch. These recordings were for practice and were not used to train the model.</p>
+    </section>
+
+    <p class="note">The training script is on <a href="https://github.com/JQTemp/two-electrode-eeg">GitHub</a>, as it was used in the project.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,207 @@
+/* Portfolio of Junaid Qazi. One family (Archivo) used across its width axis:
+   narrow cuts for names and titles, normal width for reading. */
+
+:root {
+  --paper: #fbfbfa;
+  --ink: #1a2027;
+  --sub: #58616b;
+  --rule: #e3e5e8;
+  --panel: #f1f2f0;
+  --accent: #1f7a6d;
+  --copper: #a87a28;
+  --measure: 42rem;
+  --wide: 58rem;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14181c;
+    --ink: #e7e9eb;
+    --sub: #a2aab3;
+    --rule: #2a3036;
+    --panel: #1b2025;
+    --accent: #5cc2b0;
+    --copper: #d4a85a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #14181c; --ink: #e7e9eb; --sub: #a2aab3; --rule: #2a3036;
+  --panel: #1b2025; --accent: #5cc2b0; --copper: #d4a85a; color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  font-variation-settings: "wdth" 100;
+  font-feature-settings: "kern", "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Page frame: left-aligned column with room for wide figures */
+.page {
+  width: 100%;
+  max-width: calc(var(--wide) + 2 * 2.5rem);
+  margin: 0 auto;
+  padding: 4.5rem 2.5rem 6rem;
+}
+@media (max-width: 40rem) { .page { padding: 2.75rem 1rem 4rem; } }
+
+.prose { max-width: var(--measure); }
+
+p { margin: 0 0 1.1em; }
+
+a {
+  color: var(--ink);
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+}
+a:hover { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+h1, h2, h3 { font-weight: 650; line-height: 1.12; margin: 0; }
+
+h2 {
+  font-size: 1.55rem;
+  font-variation-settings: "wdth" 78;
+  letter-spacing: -0.005em;
+  margin: 3.2rem 0 0.9rem;
+}
+
+/* ---------- Home ---------- */
+
+.name {
+  font-size: clamp(3.4rem, 13vw, 7.25rem);
+  font-weight: 700;
+  font-variation-settings: "wdth" 62;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  margin-bottom: 1.6rem;
+}
+
+.bio { font-size: 1.2rem; line-height: 1.55; max-width: 38rem; }
+
+.links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; margin-top: 1.4rem; font-weight: 550; }
+
+.work h2 { margin-top: 4.5rem; padding-top: 1.4rem; border-top: 1px solid var(--rule); }
+
+.entry {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+  padding: 1.75rem 0;
+}
+.entry + .entry { border-top: 1px solid var(--rule); }
+.entry .thumb { display: block; background: var(--panel); border-radius: 10px; padding: 0.9rem; }
+.entry .thumb img { display: block; width: 100%; height: auto; }
+.entry h3 { font-size: 1.4rem; font-variation-settings: "wdth" 78; margin-bottom: 0.45rem; }
+.entry h3 a { text-decoration-thickness: 1px; }
+.entry p { margin: 0 0 0.6rem; max-width: 34rem; }
+.entry .tags { color: var(--sub); font-size: 0.95rem; }
+@media (max-width: 40rem) {
+  .entry { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .entry .thumb { max-width: 22rem; }
+}
+
+/* ---------- Project page ---------- */
+
+.back { display: inline-block; margin-bottom: 2.5rem; font-weight: 550; font-size: 0.98rem; }
+
+.project-title {
+  font-size: clamp(2.3rem, 6.5vw, 3.9rem);
+  font-weight: 700;
+  font-variation-settings: "wdth" 66;
+  letter-spacing: -0.015em;
+  line-height: 1;
+  max-width: 14em;
+  margin-bottom: 1.2rem;
+}
+
+.lead { font-size: 1.22rem; line-height: 1.52; max-width: 38rem; color: var(--ink); }
+
+figure { margin: 2.6rem 0; }
+figcaption { color: var(--sub); font-size: 0.93rem; line-height: 1.5; margin-top: 0.75rem; max-width: var(--measure); }
+figcaption b { color: var(--ink); font-weight: 600; }
+
+.plate { background: var(--panel); border-radius: 12px; padding: clamp(1rem, 4vw, 2.6rem); }
+.plate img, figure > img, .sc-wrap svg { display: block; width: 100%; height: auto; }
+
+/* Hero render with a scale bar measured in board millimetres.
+   The render spans 81.74 mm edge to edge, with the board starting 1.5 mm in. */
+.scaled { position: relative; }
+.scalebar {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin: 0.9rem 0 0 1.835%;
+  color: var(--copper); font-size: 0.85rem; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.scalebar span {
+  display: block; flex: 0 0 12.234%; height: 6px;
+  border: 1.5px solid currentColor; border-top: 0;
+}
+
+.hero { max-width: var(--wide); }
+.hero .plate { padding: clamp(1rem, 5vw, 3.2rem); }
+
+.half { max-width: 34rem; }
+
+.sc-wrap { --sc-font: "Archivo", "Helvetica Neue", Arial, sans-serif; overflow-x: auto; }
+.sc-wrap svg { min-width: 40rem; }
+
+/* Key figures as a two-column definition list */
+.specs {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
+  margin: 2.4rem 0 0;
+  max-width: var(--measure);
+  border-top: 1px solid var(--rule);
+}
+.specs dt, .specs dd { margin: 0; padding: 0.62rem 0; border-bottom: 1px solid var(--rule); }
+.specs dt { color: var(--sub); font-size: 0.96rem; padding-right: 1rem; }
+.specs dd { font-variant-numeric: tabular-nums; }
+@media (max-width: 30rem) {
+  .specs { grid-template-columns: minmax(0, 1fr); }
+  .specs dt { border-bottom: 0; padding-bottom: 0; }
+  .specs dd { padding-top: 0.1rem; }
+}
+
+.note { color: var(--sub); font-size: 0.95rem; }
+
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+/* Two figures side by side, stacked on narrow screens */
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.pair figure { margin: 0; }
+.pair .sub { color: var(--sub); font-size: 0.9rem; margin-top: 0.45rem; }
+@media (max-width: 40rem) { .pair { grid-template-columns: minmax(0, 1fr); } }
+
+/* Scalp maps: one SVG per head plus a shared legend */
+.heads { --sc-font: "Archivo", "Helvetica Neue", Arial, sans-serif; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 2rem; }
+.heads svg, .legend svg { display: block; width: 100%; height: auto; }
+.legend { --sc-font: "Archivo", "Helvetica Neue", Arial, sans-serif; max-width: 46rem; margin: 1.2rem auto 0; }
+@media (max-width: 40rem) { .heads { grid-template-columns: minmax(0, 1fr); } }
+
+.nowrap { white-space: nowrap; }
+
+/* Renders delivered on their own light studio background */
+.renders img { display: block; width: 100%; height: auto; border-radius: 12px; background: #f5f5f5; }
+
+/* Publication block */
+.pub { max-width: var(--measure); margin: 2rem 0 0; padding: 0.2rem 0 0.2rem 1.1rem; border-left: 3px solid var(--accent); }
+.pub p { margin: 0 0 0.35rem; }
+.pub .pub-title { font-size: 1.15rem; font-weight: 650; font-variation-settings: "wdth" 85; }
+.pub .pub-venue { color: var(--sub); font-size: 0.96rem; }
+.pub .links { margin-top: 0.8rem; }
